@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(''Tokens present:'', bool\\(d.get\\(''token''\\) or d.get\\(''access_token''\\)\\)\\)\")",
+      "Bash(npm run:*)"
+    ]
+  }
+}

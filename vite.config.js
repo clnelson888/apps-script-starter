@@ -8,13 +8,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const targets = [
-  {
-    src: 'node_modules/apps-script-oauth2/dist/OAuth2.gs',
-    dest: '.',
-    rename: (fileName) => `${fileName.toLowerCase()}.js`,
-  },
   { src: 'src/html/*.html', dest: '.' },
-  { src: 'functions/**/*.js', dest: '.' },
   { src: 'appsscript.json', dest: '.' },
 ];
 

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top" />
+    <style>
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+
+      body {
+        font-family: 'Google Sans', Roboto, Arial, sans-serif;
+        font-size: 14px;
+        background: #f8f9fa;
+        padding: 20px 24px 16px;
+        color: #202124;
+      }
+
+      h2 {
+        font-size: 18px;
+        font-weight: 500;
+        color: #1155cc;
+        margin-bottom: 4px;
+      }
+
+      .subtitle {
+        font-size: 12px;
+        color: #5f6368;
+        margin-bottom: 20px;
+      }
+
+      .field { margin-bottom: 16px; }
+
+      label {
+        display: block;
+        font-size: 12px;
+        font-weight: 500;
+        color: #444;
+        margin-bottom: 5px;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+      }
+
+      input {
+        width: 100%;
+        padding: 8px 10px;
+        border: 1px solid #dadce0;
+        border-radius: 4px;
+        font-size: 14px;
+        color: #202124;
+        background: #fff;
+        transition: border-color 0.15s;
+      }
+      input:focus {
+        outline: none;
+        border-color: #1155cc;
+        box-shadow: 0 0 0 2px rgba(17,85,204,0.15);
+      }
+
+      .preview {
+        background: #e8f0fe;
+        border-left: 3px solid #1155cc;
+        border-radius: 0 4px 4px 0;
+        padding: 9px 12px;
+        font-size: 13px;
+        color: #1a237e;
+        min-height: 36px;
+        margin-bottom: 18px;
+      }
+
+      .btn-row {
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+      }
+
+      button {
+        padding: 8px 22px;
+        border-radius: 4px;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        border: none;
+        transition: background 0.15s;
+      }
+      .btn-cancel {
+        background: #fff;
+        border: 1px solid #dadce0;
+        color: #444;
+      }
+      .btn-cancel:hover { background: #f1f3f4; }
+      .btn-add {
+        background: #1155cc;
+        color: #fff;
+      }
+      .btn-add:hover { background: #0d47a1; }
+      .btn-add:disabled {
+        background: #9aa0a6;
+        cursor: default;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h2>Add Rehearsal Date</h2>
+    <p class="subtitle">Adds a date column to all section attendance sheets.</p>
+
+    <div class="field">
+      <label for="dateInput">Rehearsal Date *</label>
+      <input type="date" id="dateInput" required />
+    </div>
+
+    <div class="field">
+      <label for="timeInput">Rehearsal Start Time <span style="font-weight:400;text-transform:none">(optional)</span></label>
+      <input type="time" id="timeInput" placeholder="e.g. 15:30" />
+    </div>
+
+    <div class="preview" id="preview">Select a date above to preview.</div>
+
+    <div class="btn-row">
+      <button class="btn-cancel" onclick="google.script.host.close()">Cancel</button>
+      <button class="btn-add" id="addBtn" disabled onclick="submit()">Add Date Column</button>
+    </div>
+
+    <script>
+      const dateInput = document.getElementById('dateInput');
+      const timeInput = document.getElementById('timeInput');
+      const preview   = document.getElementById('preview');
+      const addBtn    = document.getElementById('addBtn');
+
+      // Default date to today
+      const now  = new Date();
+      const yyyy = now.getFullYear();
+      const mm   = String(now.getMonth() + 1).padStart(2, '0');
+      const dd   = String(now.getDate()).padStart(2, '0');
+      dateInput.value = `${yyyy}-${mm}-${dd}`;
+
+      dateInput.addEventListener('input', updatePreview);
+      timeInput.addEventListener('input', updatePreview);
+      updatePreview();
+
+      function updatePreview() {
+        const dateVal = dateInput.value;
+        if (!dateVal) {
+          preview.textContent = 'Select a date above to preview.';
+          addBtn.disabled = true;
+          return;
+        }
+
+        const [y, m, d] = dateVal.split('-').map(Number);
+        const date = new Date(y, m - 1, d);
+        const dayStr = date.toLocaleDateString('en-US', {
+          weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+        });
+
+        const timeVal = timeInput.value;
+        let timeStr = '';
+        if (timeVal) {
+          const [h, min] = timeVal.split(':').map(Number);
+          const period = h >= 12 ? 'PM' : 'AM';
+          const h12    = h % 12 || 12;
+          timeStr = ` at ${h12}:${String(min).padStart(2, '0')} ${period}`;
+        }
+
+        preview.textContent = '📅 ' + dayStr + timeStr;
+        addBtn.disabled = false;
+      }
+
+      function submit() {
+        const dateVal = dateInput.value;
+        if (!dateVal) return;
+
+        const timeVal = timeInput.value;
+        let timeLabel = '';
+        if (timeVal) {
+          const [h, min] = timeVal.split(':').map(Number);
+          const period = h >= 12 ? 'PM' : 'AM';
+          const h12    = h % 12 || 12;
+          timeLabel = `${h12}:${String(min).padStart(2, '0')} ${period}`;
+        }
+
+        addBtn.disabled = true;
+        addBtn.textContent = 'Adding…';
+
+        google.script.run
+          .withSuccessHandler(() => google.script.host.close())
+          .withFailureHandler(err => {
+            addBtn.disabled = false;
+            addBtn.textContent = 'Add Date Column';
+            alert('Error: ' + err.message);
+          })
+          .addRehearsalDate(dateVal, timeLabel);
+      }
+    </script>
+  </body>
+</html>
