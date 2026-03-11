@@ -24,9 +24,13 @@ function ensureDatabaseSheet(ss) {
     sheet.appendRow(DB_HEADERS);
     sheet.setFrozenRows(1);
   }
-  var cfg = getAllConfig(ss);
-  var hdrRange = sheet.getRange(1, 1, 1, DB_HEADERS.length);
-  hdrRange.setBackground(cfg.COLOR_HEADER).setFontColor('#FFFFFF').setFontWeight('bold');
+  try {
+    var cfg = getAllConfig(ss);
+    var hdrRange = sheet.getRange(1, 1, 1, DB_HEADERS.length);
+    hdrRange.setBackground(cfg.COLOR_HEADER).setFontColor('#FFFFFF').setFontWeight('bold');
+  } catch (e) {
+    Logger.log(`Could not style Database header: ${e.message}`);
+  }
   return sheet;
 }
 
@@ -231,7 +235,11 @@ function _syncSectionSheet(ss, section, names, cfg) {
     return b - a;
   });
   for (var d = 0; d < rowsToDelete.length; d++) {
-    sheet.deleteRow(rowsToDelete[d]);
+    try {
+      sheet.deleteRow(rowsToDelete[d]);
+    } catch (e) {
+      Logger.log(`Could not delete row ${rowsToDelete[d]} on ${section}: ${e.message}`);
+    }
   }
 
   // Refresh map after deletions
@@ -251,7 +259,7 @@ function _syncSectionSheet(ss, section, names, cfg) {
       sheet.getRange(nextRow, 1).setValue(sortedNames[n]);
       var lastCol = sheet.getLastColumn();
       if (lastCol >= 2) {
-        _applyAttendanceValidation(sheet, nextRow, 2, lastCol);
+        _tryApplyAttendanceValidation(sheet, nextRow, 2, lastCol);
       }
       nextRow++;
     }

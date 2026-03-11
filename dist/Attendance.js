@@ -2,7 +2,7 @@
  * Attendance.js — Add rehearsal dates and attendance column helpers.
  *
  * Handles adding date columns to section sheets and applying
- * attendance dropdown validation.
+ * attendance dropdown validation (skipped on structured table sheets).
  */
 
 /* exported doAddRehearsalDate, getOrCreateDateColumn, findDateColumn */
@@ -13,7 +13,7 @@
  * @param {string} [timeStr]  Optional time label e.g. "3:30 PM"
  */
 function doAddRehearsalDate(dateStr, timeStr) {
-  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var ss = _getSpreadsheet();
   var tz = ss.getSpreadsheetTimeZone();
   var cfg = getAllConfig(ss);
 
@@ -30,14 +30,18 @@ function doAddRehearsalDate(dateStr, timeStr) {
     var newCol = sheet.getLastColumn() + 1;
 
     var cell = sheet.getRange(1, newCol);
-    cell.setValue(date);
-    cell.setNumberFormat('M/d');
-    _styleHeaderCell(cell, cfg);
-    sheet.setColumnWidth(newCol, 55);
-    if (timeStr) cell.setNote(`Rehearsal time: ${timeStr}`);
+    try {
+      cell.setValue(date);
+      cell.setNumberFormat('M/d');
+      _styleHeaderCell(cell, cfg);
+      sheet.setColumnWidth(newCol, 55);
+      if (timeStr) cell.setNote(`Rehearsal time: ${timeStr}`);
+    } catch (e) {
+      Logger.log(`Could not style header on ${sheet.getName()}: ${e.message}`);
+    }
 
     if (lastRow >= 2) {
-      _applyAttendanceValidation(sheet, 2, newCol, newCol, lastRow);
+      _tryApplyAttendanceValidation(sheet, 2, newCol, newCol, lastRow);
     }
   }
 
@@ -63,14 +67,18 @@ function getOrCreateDateColumn(sheet, dateStr, tz, cfg) {
   var lastRow = sheet.getLastRow();
   var newCol = sheet.getLastColumn() + 1;
   var cell = sheet.getRange(1, newCol);
-  var d = new Date(dateStr);
-  cell.setValue(d);
-  cell.setNumberFormat('M/d');
-  _styleHeaderCell(cell, cfg);
-  sheet.setColumnWidth(newCol, 55);
+  try {
+    var d = new Date(dateStr);
+    cell.setValue(d);
+    cell.setNumberFormat('M/d');
+    _styleHeaderCell(cell, cfg);
+    sheet.setColumnWidth(newCol, 55);
+  } catch (e) {
+    Logger.log(`Could not style date column on ${sheet.getName()}: ${e.message}`);
+  }
 
   if (lastRow >= 2) {
-    _applyAttendanceValidation(sheet, 2, newCol, newCol, lastRow);
+    _tryApplyAttendanceValidation(sheet, 2, newCol, newCol, lastRow);
   }
 
   return newCol;
@@ -93,14 +101,20 @@ function _findDateCol(sheet, dateStr, tz) {
 }
 
 /**
- * Apply the attendance dropdown validation to a range of cells.
+ * Try to apply attendance dropdown validation. Silently skips if the
+ * sheet uses structured tables with typed columns.
  */
-function _applyAttendanceValidation(sheet, startRow, startCol, endCol, endRow) {
+function _tryApplyAttendanceValidation(sheet, startRow, startCol, endCol, endRow) {
   endRow = endRow || startRow;
-  var range = sheet.getRange(startRow, startCol, endRow - startRow + 1, endCol - startCol + 1);
-  var rule = SpreadsheetApp.newDataValidation()
-    .requireValueInList(ATTENDANCE_VALUES, true)
-    .setAllowInvalid(false)
-    .build();
-  range.setDataValidation(rule);
+  try {
+    var range = sheet.getRange(startRow, startCol, endRow - startRow + 1, endCol - startCol + 1);
+    var rule = SpreadsheetApp.newDataValidation()
+      .requireValueInList(ATTENDANCE_VALUES, true)
+      .setAllowInvalid(false)
+      .build();
+    range.setDataValidation(rule);
+  } catch (e) {
+    // Structured tables manage their own column types — skip gracefully
+    Logger.log(`Skipped validation on ${sheet.getName()}: ${e.message}`);
+  }
 }

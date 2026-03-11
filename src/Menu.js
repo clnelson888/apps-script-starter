@@ -43,6 +43,9 @@ function showFormUrls() {
 function setupSystem() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
 
+  // Store spreadsheet ID for use in google.script.run contexts (e.g. HTML dialogs)
+  PropertiesService.getScriptProperties().setProperty('SPREADSHEET_ID', ss.getId());
+
   ensureDataSheet(ss);
   ensureDatabaseSheet(ss);
   createForms(ss);
@@ -68,6 +71,9 @@ function syncRoster() {
 
 function addRehearsalDate(dateStr, timeStr) {
   if (!dateStr) {
+    // Store spreadsheet ID before opening dialog so google.script.run can find it
+    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    PropertiesService.getScriptProperties().setProperty('SPREADSHEET_ID', ss.getId());
     var html = HtmlService.createHtmlOutputFromFile('add-date-dialog').setWidth(420).setHeight(310);
     SpreadsheetApp.getUi().showModalDialog(html, 'Add Rehearsal Date');
     return;

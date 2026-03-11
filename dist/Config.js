@@ -6,7 +6,7 @@
  * being hardcoded in the script.
  */
 
-/* exported getConfig, getAllConfig, setConfig, ensureDataSheet, DATA_SHEET_NAME, CONFIG_DEFAULTS */
+/* exported getConfig, getAllConfig, setConfig, ensureDataSheet, _getSpreadsheet, DATA_SHEET_NAME, CONFIG_DEFAULTS */
 
 var DATA_SHEET_NAME = 'Data';
 
@@ -108,4 +108,17 @@ function ensureDataSheet(ss) {
       sheet.appendRow([keys[j], CONFIG_DEFAULTS[keys[j]]]);
     }
   }
+}
+
+/**
+ * Get the spreadsheet reliably, even from google.script.run (HTML dialog) contexts
+ * where getActiveSpreadsheet() may return the wrong spreadsheet.
+ * Uses the SPREADSHEET_ID stored in script properties by setupSystem().
+ */
+function _getSpreadsheet() {
+  var storedId = PropertiesService.getScriptProperties().getProperty('SPREADSHEET_ID');
+  if (storedId) {
+    return SpreadsheetApp.openById(storedId);
+  }
+  return SpreadsheetApp.getActiveSpreadsheet();
 }

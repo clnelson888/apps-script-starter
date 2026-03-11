@@ -37,7 +37,8 @@
       "mcp__google-workspace__get_spreadsheet_info",
       "mcp__google-workspace__read_sheet_values",
       "WebFetch(domain:issuetracker.google.com)",
-      "WebFetch(domain:stackoverflow.com)"
+      "WebFetch(domain:stackoverflow.com)",
+      "Bash(cd \"C:\\\\Users\\\\Cameron\\\\OneDrive - Kansas State University\\\\School\\\\2025-2026 Spring\\\\MIS 677 - Senior MIS Project\\\\apps-script-starter\" && npm run build && npx clasp push --force 2>&1)"
     ]
   }
 }
