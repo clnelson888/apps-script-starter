@@ -29,7 +29,15 @@
       "mcp__google-apps-script__script_projects_deployments_list",
       "mcp__google-apps-script__script_projects_versions_list",
       "mcp__google-apps-script__list_script_processes",
-      "Bash(find \"C:\\\\Users\\\\Cameron\\\\.claude\\\\mcp-servers\\\\google-appscript-mcp-server\" -type f -name \"*.md\" -o -name \".env*\" -o -name \"*config*\" -o -name \"*oauth*\" -o -name \"*auth*\" 2>/dev/null | head -30)"
+      "Bash(find \"C:\\\\Users\\\\Cameron\\\\.claude\\\\mcp-servers\\\\google-appscript-mcp-server\" -type f -name \"*.md\" -o -name \".env*\" -o -name \"*config*\" -o -name \"*oauth*\" -o -name \"*auth*\" 2>/dev/null | head -30)",
+      "Bash(uvx --version 2>&1)",
+      "Bash(pip install:*)",
+      "Read(//c/Users/Cameron/.claude/**)",
+      "Bash(python -m uv --version 2>&1)",
+      "mcp__google-workspace__get_spreadsheet_info",
+      "mcp__google-workspace__read_sheet_values",
+      "WebFetch(domain:issuetracker.google.com)",
+      "WebFetch(domain:stackoverflow.com)"
     ]
   }
 }
