@@ -2,7 +2,19 @@
   "permissions": {
     "allow": [
       "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(''Tokens present:'', bool\\(d.get\\(''token''\\) or d.get\\(''access_token''\\)\\)\\)\")",
-      "Bash(npm run:*)"
+      "Bash(npm run:*)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(curl -s \"https://raw.githubusercontent.com/microsoft/azure-devops-mcp/main/docs/GETTINGSTARTED.md\")",
+      "Bash(claude mcp add azure-devops -- npx -y @azure-devops/mcp clnelson888)",
+      "mcp__azure-devops__core_list_projects",
+      "mcp__azure-devops__core_list_project_teams",
+      "mcp__azure-devops__wit_list_backlog_work_items",
+      "mcp__azure-devops__wit_get_work_items_batch_by_ids",
+      "mcp__azure-devops__wit_create_work_item",
+      "mcp__azure-devops__wit_list_backlogs",
+      "mcp__azure-devops__wit_work_items_link",
+      "Bash(cd \"C:\\\\Users\\\\Cameron\\\\OneDrive - Kansas State University\\\\School\\\\2025-2026 Spring\\\\MIS 677 - Senior MIS Project\\\\apps-script-starter\" && rm src/server/attendance.js src/server/formGenerator.js)",
+      "Bash(cd \"C:\\\\Users\\\\Cameron\\\\OneDrive - Kansas State University\\\\School\\\\2025-2026 Spring\\\\MIS 677 - Senior MIS Project\\\\apps-script-starter\" && npx clasp push 2>&1)"
     ]
   }
 }
