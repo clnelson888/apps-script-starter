@@ -14,7 +14,22 @@
       "mcp__azure-devops__wit_list_backlogs",
       "mcp__azure-devops__wit_work_items_link",
       "Bash(cd \"C:\\\\Users\\\\Cameron\\\\OneDrive - Kansas State University\\\\School\\\\2025-2026 Spring\\\\MIS 677 - Senior MIS Project\\\\apps-script-starter\" && rm src/server/attendance.js src/server/formGenerator.js)",
-      "Bash(cd \"C:\\\\Users\\\\Cameron\\\\OneDrive - Kansas State University\\\\School\\\\2025-2026 Spring\\\\MIS 677 - Senior MIS Project\\\\apps-script-starter\" && npx clasp push 2>&1)"
+      "Bash(cd \"C:\\\\Users\\\\Cameron\\\\OneDrive - Kansas State University\\\\School\\\\2025-2026 Spring\\\\MIS 677 - Senior MIS Project\\\\apps-script-starter\" && npx clasp push 2>&1)",
+      "WebSearch",
+      "WebFetch(domain:developers.google.com)",
+      "WebFetch(domain:www.benlcollins.com)",
+      "WebFetch(domain:pulse.appsscript.info)",
+      "WebFetch(domain:tanaikech.github.io)",
+      "WebFetch(domain:support.google.com)",
+      "Read(//c/Users/Cameron/OneDrive - Kansas State University/School/2025-2026 Spring/MIS 677 - Senior MIS Project/apps-script-starter/$HOME/.claude/mcp-servers/**)",
+      "Bash(npm install:*)",
+      "Bash(claude mcp:*)",
+      "mcp__google-apps-script__script_projects_get",
+      "mcp__google-apps-script__script_projects_get_content",
+      "mcp__google-apps-script__script_projects_deployments_list",
+      "mcp__google-apps-script__script_projects_versions_list",
+      "mcp__google-apps-script__list_script_processes",
+      "Bash(find \"C:\\\\Users\\\\Cameron\\\\.claude\\\\mcp-servers\\\\google-appscript-mcp-server\" -type f -name \"*.md\" -o -name \".env*\" -o -name \"*config*\" -o -name \"*oauth*\" -o -name \"*auth*\" 2>/dev/null | head -30)"
     ]
   }
 }
