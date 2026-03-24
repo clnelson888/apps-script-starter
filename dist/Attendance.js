@@ -12,8 +12,8 @@
  * @param {string} dateStr  ISO date "YYYY-MM-DD"
  * @param {string} [timeStr]  Optional time label e.g. "3:30 PM"
  */
-function doAddRehearsalDate(dateStr, timeStr) {
-  var ss = _getSpreadsheet();
+function doAddRehearsalDate(dateStr, timeStr, ssId) {
+  var ss = ssId ? SpreadsheetApp.openById(ssId) : _getSpreadsheet();
   var tz = ss.getSpreadsheetTimeZone();
   var cfg = getAllConfig(ss);
 

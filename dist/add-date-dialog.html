@@ -120,6 +120,7 @@
     </div>
 
     <script>
+      const SPREADSHEET_ID = '<?= ssId ?>';
       const dateInput = document.getElementById('dateInput');
       const timeInput = document.getElementById('timeInput');
       const preview   = document.getElementById('preview');
@@ -186,7 +187,7 @@
             addBtn.textContent = 'Add Date Column';
             alert('Error: ' + err.message);
           })
-          .addRehearsalDate(dateVal, timeLabel);
+          .addRehearsalDate(dateVal, timeLabel, SPREADSHEET_ID);
       }
     </script>
   </body>

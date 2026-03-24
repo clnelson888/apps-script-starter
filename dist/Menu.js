@@ -69,16 +69,18 @@ function syncRoster() {
   SpreadsheetApp.getUi().alert('Roster sync complete. Form dropdowns updated.');
 }
 
-function addRehearsalDate(dateStr, timeStr) {
+function addRehearsalDate(dateStr, timeStr, ssId) {
   if (!dateStr) {
-    // Store spreadsheet ID before opening dialog so google.script.run can find it
+    // Pass the spreadsheet ID into the dialog template so it can send it back
+    // via google.script.run (avoids stale script-property issues)
     var ss = SpreadsheetApp.getActiveSpreadsheet();
-    PropertiesService.getScriptProperties().setProperty('SPREADSHEET_ID', ss.getId());
-    var html = HtmlService.createHtmlOutputFromFile('add-date-dialog').setWidth(420).setHeight(310);
+    var tpl = HtmlService.createTemplateFromFile('add-date-dialog');
+    tpl.ssId = ss.getId();
+    var html = tpl.evaluate().setWidth(420).setHeight(310);
     SpreadsheetApp.getUi().showModalDialog(html, 'Add Rehearsal Date');
     return;
   }
-  doAddRehearsalDate(dateStr, timeStr || '');
+  doAddRehearsalDate(dateStr, timeStr || '', ssId);
 }
 
 function updateForms() {
